@@ -19,6 +19,16 @@ class Link(db.Model):
     date_added = db.Column(db.Date, default=datetime.today())
 
 
+@app.route('/<int:id>')
+def redir(id):
+    q = Link.query.get(id)
+    if q is None:
+        flash('Nie odnaleziono takiego URL.')
+        return redirect(url_for('index'))
+
+    return redirect(q.long_url)
+
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
@@ -27,7 +37,7 @@ def index():
         q = Link.query.filter_by(long_url=request.form.get('link')).first()
         if q is not None:
             url = f'{request.host}/{q.id}'
-            flash(Markup(f'Twój krótki link to: <a target="_blank" href="{url}">{url}</a>'))
+            flash(Markup(f'Twój krótki link to: <a target="_blank" href="{q.long_url}">{url}</a>'))
             return redirect(url_for('index'))
 
         # jeśli nie istnieje to wygeneruj i zapisz
@@ -35,7 +45,7 @@ def index():
         db.session.add(link)
         db.session.commit()
         url = f'{request.host}/{link.id}'
-        flash(Markup(f'Twój krótki link to: <a target="_blank" href="{url}">{url}</a>'))
+        flash(Markup(f'Twój krótki link to: <a target="_blank" href="{link.long_url}">{url}</a>'))
         return redirect(url_for('index'))
 
     return render_template('index.html')
