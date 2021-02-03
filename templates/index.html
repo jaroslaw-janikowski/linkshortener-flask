@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Shortener - Flask</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/dist/css/bootstrap.min.css') }}">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-6 offset-3">
+                <h1>Skracacz Linków - Flask</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 offset-3">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <p>{{ message }}</p>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6 offset-3">
+                <form class="form" action="/" method="POST">
+                    <div class="form-group">
+                        <label class="form-label">URL</label>
+                        <input class="form-control" type="text" name="link">
+                    </div>
+                    <input class="btn btn-primary" type="submit" value="Skróć">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
